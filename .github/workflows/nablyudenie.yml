@@ -1,0 +1,63 @@
+name: Наблюдение
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+    inputs:
+      proba:
+        description: "Нарочна проба: dolu = известие „не отговаря“, gore = „работи отново“, празно = обикновен кръг"
+        required: false
+        default: ""
+  push:
+    branches: [main]
+    paths: ["test/**", "logika.mjs", "proveri.mjs", "celi.json"]
+
+# Два кръга никога не вървят наведнъж – иначе и двата биха пратили едно и също известие.
+concurrency:
+  group: nablyudenie
+  cancel-in-progress: false
+
+permissions:
+  contents: write # записва sastoyanie/sastoyanie.json обратно в main
+
+jobs:
+  testove:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - run: node --test test/*.test.mjs
+
+  krag:
+    if: github.event_name != 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Проверка на адресите
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          SKRITI_CELI: ${{ secrets.SKRITI_CELI }}
+          PROBA: ${{ github.event.inputs.proba }}
+        run: node proveri.mjs
+
+      - name: Запис на състоянието (само при промяна)
+        run: |
+          if [ -z "$(git status --porcelain -- sastoyanie/)" ]; then
+            echo "Без промяна в състоянието."
+            exit 0
+          fi
+          git config user.name "marmot-nablyudenie"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add sastoyanie/sastoyanie.json
+          git commit -q -m "Състояние $(date -u +%FT%TZ)"
+          for opit in 1 2 3; do
+            git pull -q --rebase origin main && git push -q origin HEAD:main && exit 0
+            sleep 5
+          done
+          echo "Състоянието не се записа" >&2
+          exit 1
+

@@ -1,0 +1,57 @@
+{
+  "_obyasnenie": "Какво се проверява. Само публични адреси, без вход. 'json' значи: отговорът трябва да е JSON със status = ok. 'glaven' = върви на главния сървър в Hetzner (178.104.145.25); падне ли повечето от тях наведнъж, известието е едно общо. 'dopustimi' = кодове, които за тази цел значат „жив“ (Shopify връща 403/429 на адреси на GitHub). Вътрешните адреси (случайни имена на sslip.io) не са тук, а в тайната SKRITI_CELI със същите полета.",
+  "celi": [
+    {
+      "id": "editera",
+      "ime": "Editera",
+      "url": "https://marmot.editera.io/api/health",
+      "json": true,
+      "glaven": true,
+      "kakvo": "Вътрешната система (marmot.editera.io и library.marmot-books.com). В Coolify: приложение marmot-library → Logs. Касата и Odoo не се пипат."
+    },
+    {
+      "id": "kolichka",
+      "ime": "Количката на сайта",
+      "url": "https://marmot.editera.io/kolichka-proba/zdrave",
+      "json": true,
+      "glaven": true,
+      "kakvo": "Плащането в marmot-books.com минава оттук – клиентите не могат да поръчат. В Coolify: приложение marmot-kolichka → Logs, после Restart."
+    },
+    {
+      "id": "sync-order-web",
+      "ime": "Поръчки към Odoo (sync-order-web)",
+      "url": "https://orders.marmot-books.com/api/health",
+      "json": true,
+      "glaven": true,
+      "kakvo": "Поръчките от магазина не стигат до Odoo. В Coolify: приложение sync-order-web → Logs. Самият Odoo не се пипа."
+    },
+    {
+      "id": "magazin",
+      "ime": "Магазинът marmot-books.com",
+      "url": "https://marmot-books.com",
+      "json": false,
+      "glaven": false,
+      "kakvo": "Сайтът е в Shopify, не на нашия сървър. Първо https://www.shopifystatus.com, после админът на Shopify (плащане на абонамента).",
+      "dopustimi": [
+        403,
+        429
+      ]
+    },
+    {
+      "id": "editera-io",
+      "ime": "editera.io (лендинг)",
+      "url": "https://editera.io",
+      "json": false,
+      "glaven": true,
+      "kakvo": "Публичната страница на Editera. В Coolify: приложение editera-landing."
+    },
+    {
+      "id": "rediox-hub",
+      "ime": "Rediox Hub",
+      "url": "https://hub.getrediox.com",
+      "json": false,
+      "glaven": true,
+      "kakvo": "В Coolify: приложение rediox-hub → Logs."
+    }
+  ]
+}
