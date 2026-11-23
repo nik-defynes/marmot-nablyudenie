@@ -1,0 +1,33 @@
+{
+  "celi": {
+    "editera": {
+      "dolu": false
+    },
+    "kolichka": {
+      "dolu": false
+    },
+    "sync-order-web": {
+      "dolu": false
+    },
+    "magazin": {
+      "dolu": false
+    },
+    "editera-io": {
+      "dolu": false
+    },
+    "rediox-hub": {
+      "dolu": false
+    },
+    "wiki-mcp": {
+      "dolu": false
+    },
+    "marmot-mcp": {
+      "dolu": false
+    },
+    "komanden-centar": {
+      "dolu": false
+    }
+  },
+  "sedmica": [],
+  "posledenOtchet": null
+}
